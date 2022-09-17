@@ -1,0 +1,9 @@
+(executable
+ (public_name TIPE)
+ (name main)
+ (libraries TIPE bimage-unix bimage-io bimage-display))
+
+(env
+ (dev
+  (flags
+   (:standard -w -26))))
