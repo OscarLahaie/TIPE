@@ -82,6 +82,7 @@ let () =
       image
   in
   (* Detection de contours *)
+  let filter = Image.copy image in
   let () =
     Image.for_each_pixel
       (fun x y _ ->
@@ -91,7 +92,16 @@ let () =
           else Pixel.v rgb [ 0.; 0.; 0. ]))
       image
   in
-  let original = Window.create "test" original () in
-  let modified = Window.create "test" image () in
+  (* Erosion *)
+  let erosion = Image.copy image in
+  let erosion =
+    TIPE.Erosion.filter_noise ~surrounding_pixels:3 ~round:1 erosion
+  in
+
+  (* Affichage *)
+  let original = Window.create "Original" original () in
+  let filter = Window.create "Filter" filter () in
+  let modified = Window.create "Border" image () in
+  let erosion = Window.create "Erosion" erosion () in
   let () = Window.on_mouse_move (mouse_callback image) modified in
-  Bimage_display.show_all [ original; modified ]
+  Bimage_display.show_all [ original; filter; modified ]
