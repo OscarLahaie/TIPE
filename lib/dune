@@ -1,2 +1,8 @@
 (library
- (name TIPE))
+ (name TIPE)
+ (libraries bimage-unix bimage-io bimage-display))
+
+(env
+ (dev
+  (flags
+   (:standard -w -26))))
