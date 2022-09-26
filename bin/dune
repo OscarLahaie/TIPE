@@ -1,5 +1,5 @@
 (executables
- (public_names TIPE border hsv)
+ (public_names main border hsv)
  (names main border_detection hsv)
  (libraries TIPE bimage-unix bimage-io bimage-display))
 
