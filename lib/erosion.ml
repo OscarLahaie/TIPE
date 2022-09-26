@@ -12,9 +12,9 @@ let is_isolated image x y surrounding_pixels =
     List.length
       (List.filter
          (fun pixel ->
-           Pixel.get pixel 0 = 1.
-           && Pixel.get pixel 1 = 1.
-           && Pixel.get pixel 2 = 1.)
+           Pixel.get pixel 0 > 0.
+           && Pixel.get pixel 1 > 0.
+           && Pixel.get pixel 2 > 0.)
          [
            Image.get_pixel image x (y - 1);
            Image.get_pixel image x (y + 1);
@@ -40,9 +40,9 @@ let is_surrounded image x y surrounding_pixels =
     List.length
       (List.filter
          (fun pixel ->
-           Pixel.get pixel 0 = 1.
-           && Pixel.get pixel 1 = 1.
-           && Pixel.get pixel 2 = 1.)
+           Pixel.get pixel 0 > 0.
+           && Pixel.get pixel 1 > 0.
+           && Pixel.get pixel 2 > 0.)
          [
            Image.get_pixel image x (y - 1);
            Image.get_pixel image x (y + 1);
@@ -61,9 +61,8 @@ let erosion ~surrounding_pixels ~round image =
     let original = Image.copy image in
     Image.for_each_pixel
       (fun x y _ ->
-        let current_pixel = Image.get_pixel original x y in
         Image.set_pixel image x y
-          (if is_isolated image x y surrounding_pixels then
+          (if is_isolated original x y surrounding_pixels then
            Pixel.v rgb [ 0.; 0.; 0. ]
           else Pixel.v rgb [ 1.; 1.; 1. ]))
       image
@@ -75,9 +74,8 @@ let rev_erosion ~surrounding_pixels ~round image =
     let original = Image.copy image in
     Image.for_each_pixel
       (fun x y _ ->
-        let current_pixel = Image.get_pixel original x y in
         Image.set_pixel image x y
-          (if is_surrounded image x y surrounding_pixels then
+          (if is_surrounded original x y surrounding_pixels then
            Pixel.v rgb [ 1.; 1.; 1. ]
           else Pixel.v rgb [ 0.; 0.; 0. ]))
       image
