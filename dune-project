@@ -2,10 +2,10 @@
 
 (name TIPE)
 
-(generate_opam_files true)
+(generate_opam_files false)
 
 (source
- (github username/reponame))
+ (github OscarLahaie/TIPE))
 
 (authors "Oscar Lahaie")
 
@@ -13,12 +13,13 @@
 
 (license LICENSE)
 
-(documentation https://url/to/documentation)
+(documentation https://github.com/OscarLahaie/TIPE/blob/main/README.md)
 
 (package
  (name TIPE)
- (synopsis "A short synopsis")
+ (synopsis
+  "An algorithm to evaluate the presence of traffic signs in an image")
  (description "A longer description")
  (depends ocaml dune bimage)
  (tags
-  (topics "to describe" your project)))
+  (DOI "image processing" "traffic signs" TIPE)))
