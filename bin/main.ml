@@ -4,10 +4,18 @@ open Bimage
 let mouse_callback image _window x y =
   let x = Float.to_int x in
   let y = Float.to_int y in
-  Printf.printf "%d, %d, color : %f %f %f \n%!" x y
-    (Pixel.get (Image.get_pixel image x y) 0)
-    (Pixel.get (Image.get_pixel image x y) 1)
-    (Pixel.get (Image.get_pixel image x y) 2)
+  let est_cercle = ref false in
+  let r = ref 20 in
+  while
+    est_cercle :=
+      TIPE.Circle_detection.is_circle ~x ~y ~r:!r ~accuracy:0.6 ~step:100 image;
+    (not !est_cercle) && !r < 200
+  do
+    incr r
+  done;
+  Printf.printf "%d %d\n" x y;
+  if !est_cercle then Printf.printf "Est cercle de r = %d" !r
+  else print_endline "Pas un cercle"
 
 let () =
   let original = Bimage_io.read f32 rgb Sys.argv.(1) |> Result.get_ok in
@@ -56,6 +64,6 @@ let () =
   let original = Window.create "original" original () in
   let hsv = Window.create "hsv" hsv_rgb () in
   let filter = Window.create "filter" image () in
-  let erosion = Window.create "Erosion" erosion () in
-  let () = Window.on_mouse_move (mouse_callback hsv_rgb) filter in
-  Bimage_display.show_all [ original; hsv; filter; erosion ]
+  let erosion_win = Window.create "Erosion" erosion () in
+  let () = Window.on_mouse_move (mouse_callback erosion) erosion_win in
+  Bimage_display.show_all [ original; hsv; filter; erosion_win ]
