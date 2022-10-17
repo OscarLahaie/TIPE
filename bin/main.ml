@@ -5,16 +5,17 @@ let mouse_callback image _window x y =
   let x = Float.to_int x in
   let y = Float.to_int y in
   let est_cercle = ref false in
-  let r = ref 20 in
+  let r = ref 10 in
   while
     est_cercle :=
       TIPE.Circle_detection.is_circle ~x ~y ~r:!r ~accuracy:0.6 ~step:100 image;
-    (not !est_cercle) && !r < 200
+    (not !est_cercle) && !r < 100
   do
     incr r
   done;
-  Printf.printf "%d %d\n" x y;
-  if !est_cercle then Printf.printf "Est cercle de r = %d" !r
+  if !est_cercle then (
+    print_endline "Est cercle";
+    TIPE.Circle_detection.draw_circle ~x ~y ~r:!r image)
   else print_endline "Pas un cercle"
 
 let () =
@@ -57,10 +58,22 @@ let () =
   in
   let erosion =
     Image.copy image
-    |> TIPE.Erosion.filter_noise ~surrounding_pixels:4 ~round:10
-    |> TIPE.Erosion.filter_noise ~surrounding_pixels:4 ~round:10
+    |> TIPE.Erosion.filter_noise ~surrounding_pixels:4 ~round:3
+    |> TIPE.Erosion.filter_noise ~surrounding_pixels:4 ~round:3
   in
 
+  let circles =
+    TIPE.Circle_detection.potential_circles ~r_min:20 ~r_max:100 erosion
+  in
+  let () =
+    List.iter
+      (fun (x, y, r) ->
+        if
+          TIPE.Circle_detection.is_circle ~x ~y ~r ~step:100 ~accuracy:0.5
+            erosion
+        then TIPE.Circle_detection.draw_circle ~x ~y ~r erosion)
+      circles
+  in
   let original = Window.create "original" original () in
   let hsv = Window.create "hsv" hsv_rgb () in
   let filter = Window.create "filter" image () in
