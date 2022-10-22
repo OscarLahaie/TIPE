@@ -57,9 +57,7 @@ let () =
       hsv_rgb
   in
   let erosion =
-    Image.copy image
-    |> TIPE.Erosion.filter_noise ~surrounding_pixels:4 ~round:3
-    |> TIPE.Erosion.filter_noise ~surrounding_pixels:4 ~round:3
+    Image.copy image |> TIPE.Erosion.filter_noise ~surrounding_pixels:4 ~round:3
   in
 
   let circles =
