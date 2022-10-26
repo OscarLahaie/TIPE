@@ -32,7 +32,7 @@ let is_circle ~x ~y ~r ~step ~accuracy pixel_selection =
   float_of_int !valid_points /. float_of_int step >= accuracy
 
 let potential_circles ~r_min ~r_max ~step pixel_selection =
-  let circles = Hashtbl.create 1000 in
+  let circles = Hashtbl.create 100 in
   let add_points ~x ~y ~step =
     for r = r_min to r_max do
       for i = 1 to step do

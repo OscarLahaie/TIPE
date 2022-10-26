@@ -19,6 +19,7 @@ let mouse_callback image _window x y =
   else print_endline "Pas un cercle"
 
 let () =
+  let t = Sys.time () in
   let original = Bimage_io.read f32 rgb Sys.argv.(1) |> Result.get_ok in
   let width, height, _ = Image.shape original in
   let hsv = Image.v (Image.ty original) Color.hsv width height in
@@ -51,7 +52,7 @@ let () =
         Image.set_pixel image x y
           (if
            (hue >= 0. && hue < 0.1)
-           && saturation > 0.3 && value > 0. && value < 1.
+           && saturation > 0.5 && value > 0.5 && value < 1.
           then current_pixel
           else Pixel.v rgb [ 0.; 0.; 0. ]))
       hsv_rgb
@@ -59,10 +60,13 @@ let () =
   let erosion =
     Image.copy image |> TIPE.Erosion.filter_noise ~surrounding_pixels:4 ~round:3
   in
+  print_endline ("After erosion : " ^ string_of_float (Sys.time () -. t));
 
   let circles =
-    TIPE.Circle_detection.potential_circles ~r_min:20 ~r_max:100 erosion
+    TIPE.Circle_detection.potential_circles ~r_min:20 ~r_max:50 erosion
   in
+  print_endline ("After circles : " ^ string_of_float (Sys.time () -. t));
+
   let () =
     List.iter
       (fun (x, y, r) ->
@@ -72,6 +76,8 @@ let () =
         then TIPE.Circle_detection.draw_circle ~x ~y ~r erosion)
       circles
   in
+  print_endline ("After print : " ^ string_of_float (Sys.time () -. t));
+
   let original = Window.create "original" original () in
   let hsv = Window.create "hsv" hsv_rgb () in
   let filter = Window.create "filter" image () in
