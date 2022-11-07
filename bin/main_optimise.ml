@@ -36,15 +36,8 @@ let () =
       ~step:50 pixel_selection
   in
   print_endline ("After circles : " ^ string_of_float (Sys.time () -. t));
-  let () =
-    List.iter
-      (fun (x, y, r) ->
-        if
-          TIPE.Circle_detection_optimise.is_circle ~x ~y ~r ~step:50
-            ~accuracy:0.5 pixel_selection
-        then TIPE.Circle_detection_optimise.draw_circle ~x ~y ~r original)
-      circles
-  in
+  let () = TIPE.Extract_data.save_sub_pictures original circles "subtest" in
+
   print_endline ("After print : " ^ string_of_float (Sys.time () -. t));
   (* Filtre chromatique *)
   let original = Window.create "original" original () in
