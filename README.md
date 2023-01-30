@@ -2,27 +2,31 @@
 
 ## Titre
 Détection des panneaux de signalisation en les extrayant d'une image
+
 Détection et extraction des panneaux de signalisation d'une image
 
 ### Mots clés
-Français : Circulation routière, Filtrage d'une image, Reconnaissance de formes, Analyse d'image, Efficacité du traitement
-Anglais : Road traffic, Image filtering, Shape recognition, Image analysis, Processing efficiency
+Français : Conduite automatisée, Filtrage d'une image, Reconnaissance de formes, Analyse d'image, Efficacité du traitement
+Anglais :  Automated driving, Image filtering, Shape recognition, Image analysis, Processing efficiency
 
 ### Positionnements théoriques
 Informatique (Informatique pratique), Informatique (Informatique théorique), Sciences industrielles (Traitement du signal)
 
 ### Bibliographie commentée
-Pour arriver à extraire de façon optimale les contours des objets dans une image, nous allons utiliser le filtre de Canny. Ce filtre, dont la théorie est démontrée par Canny lui-même [1], va permettre à l'aide de gradients d'intensité de détecter les ruptures de contraste dans l'image. Pour concevoir cet algorithme, il faut travailler l'image. En effet, lors d'une prise en photo de nuit et avec la vitesse d'obturation du capteur, la photo peut se retrouver bruitée. Pour filtrer l'image, on applique un flou Gaussien en passant chaque pixel par une matrice de convolution [2]. Ensuite on détermine les gradients associés à chaque pixel, les gradients les plus élevés représentent ainsi un dénivelé de contraste donc potentiellement le bord d'un objet. En appliquant les formules du modèle continu des contours [3], on calcule les gradients associés et on détermine ainsi les contours. On peut aussi, en changeant de système de couleurs, isoler des nuances intéressantes dans l’image [4]. On pourra alors combiner ces deux méthodes pour ne conserver que les zones d'intérêt et éliminer la plupart des “faux positifs” dans le futur. Une fois le nombre de points d'intérêt considérablement réduit, nous pouvons appliquer sur l'image une transformée de Hough pour détecter les formes remarquables [5]. Ainsi on pourra identifier les droites présentes dans l'image et les  cercles. Permettant donc l’identification des rectangles, triangles et cercles donc les principales formes de panneaux. Finalement pour tester mes algorithmes j'utilise une base d’images de panneaux de signalisations allemands [6]. De plus, ceci sont très semblables aux panneaux français donc conviennent parfaitement pour les tests puis une application de l'algorithme aux routes françaises.
+Pour arriver à extraire de façon optimale les contours des objets dans une image, nous allons utiliser le filtre de Canny. Ce filtre, dont la théorie est démontrée par Canny [1], va permettre à l'aide de gradients d'intensité de détecter les ruptures de contraste dans l'image. Pour concevoir cet algorithme, il faut au préalable traiter l'image. En effet, lors d'une prise en photo de nuit et avec la vitesse d'obturation du capteur, la photo peut se retrouver bruitée. Pour filtrer l'image, on applique un flou Gaussien en passant chaque pixel par une matrice de convolution [2]. 
+Ensuite on détermine les gradients associés à chaque pixel, les gradients les plus élevés représentent ainsi un dénivelé de contraste donc potentiellement le bord d'un objet. En appliquant les formules du modèle continu des contours [3], on calcule les gradients associés et on détermine ainsi les contours. On peut aussi, en changeant de système de couleurs, isoler des nuances intéressantes dans l’image [4]. On pourra alors combiner ces deux méthodes pour ne conserver que les zones d'intérêt et éliminer la plupart des “faux positifs” après analyse. 
+Une fois le nombre de points d'intérêt considérablement réduit, nous pouvons appliquer sur l'image une transformée de Hough pour détecter les formes remarquables [5]. Ainsi on pourra identifier les droites présentes dans l'image et les  cercles. Permettant donc l’identification des rectangles, triangles et cercles donc les principales formes de panneaux. 
+Enfin pour tester mes algorithmes j'utilise une base d’images de panneaux de signalisations allemands [6]. Ceci sont très semblables aux panneaux français donc conviennent parfaitement pour les tests puis une application de l'algorithme aux routes françaises.
 
 ### Problématique retenue
-Comment identifier dans une image issue de la route, les différents panneaux de signalisation ? 
+Comment identifier dans une photo sur la route, les différents panneaux de signalisation ? 
 Comment le faire de façon efficace ? Comment les extraire en les situant dans le contexte de l'image ?
 
 ### Quelle est votre motivation pour le choix du sujet?
-Pour le développement de véhicules avec un niveau d'autonomie plus ou moins élevé, l'étude du contexte environnant est un enjeu majeur. Ainsi nous avons souhaité voir comment faire pour extraire les informations d'une image de la route permettant au véhicule d'assurer entre autres sa sécurité et celles des autres usagers.
+Pour le développement de véhicules avec un niveau d'autonomie plus ou moins élevé, l'étude du contexte environnant est un enjeu majeur. Ainsi nous avons souhaité voir comment faire pour extraire les informations d'une image de la route de manière rapide et juste permettant au véhicule d'assurer entre autres sa sécurité et celles des autres usagers.
 
 ### En quoi votre étude s'inscrit-elle dans le thème de l'année ? 
-Dans la mesure où le traffic routier est aujourd'hui partie intégrante de la vie urbaine. Il est intéressant pour les moyens de transport citadins du futur de pouvoir evoluer en analysant le contexte notamment par les panneaux de circulation. 
+Les véhicules autonomes étant voués à être les nouveaux vecteurs de transports citadins. Le developpement de ces véhicule est alors en lien direct avec la ville.
 
 ### Objectifs du TIPE
 A partir d'une image issue de la route, nous allons chercher à identifier les éléments permettant au véhicule d'appréhender le contexte de la circulation environnante.
