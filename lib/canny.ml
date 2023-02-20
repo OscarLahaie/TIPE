@@ -143,3 +143,69 @@ let gradient_map ?(gradient_floor = 0.) (image : (_, _, Color.hsv) Image.t) =
   in
   Image.for_each_pixel (fun x y _ -> gradient_evalutation x y) image;
   Image.convert ty rgb gradient_image
+
+let gradient_map_rgb ?(gradient_floor = 0.) (image : (_, _, Color.rgb) Image.t)
+    =
+  let ty = Image.ty image in
+  let heigth, width, _ = Image.shape image in
+  let gradient_image = Image.v ty gray heigth width in
+  let gradient_x x y =
+    let left_value =
+      try
+        sqrt
+          (Pixel.get (Image.get_pixel image (x - 1) y) 2
+           *. Pixel.get (Image.get_pixel image (x - 1) y) 2
+          +. Pixel.get (Image.get_pixel image (x - 1) y) 1
+             *. Pixel.get (Image.get_pixel image (x - 1) y) 1
+          +. Pixel.get (Image.get_pixel image (x - 1) y) 0
+             *. Pixel.get (Image.get_pixel image (x - 1) y) 0)
+      with _ -> 0.
+    in
+    let right_value =
+      try
+        sqrt
+          (Pixel.get (Image.get_pixel image (x + 1) y) 2
+           *. Pixel.get (Image.get_pixel image (x + 1) y) 2
+          +. Pixel.get (Image.get_pixel image (x + 1) y) 1
+             *. Pixel.get (Image.get_pixel image (x + 1) y) 1
+          +. Pixel.get (Image.get_pixel image (x + 1) y) 0
+             *. Pixel.get (Image.get_pixel image (x + 1) y) 0)
+      with _ -> 0.
+    in
+    right_value -. left_value
+  in
+  let gradient_y x y =
+    let up_value =
+      try
+        sqrt
+          (Pixel.get (Image.get_pixel image x (y + 1)) 2
+           *. Pixel.get (Image.get_pixel image x (y + 1)) 2
+          +. Pixel.get (Image.get_pixel image x (y + 1)) 1
+             *. Pixel.get (Image.get_pixel image x (y + 1)) 1
+          +. Pixel.get (Image.get_pixel image x (y + 1)) 0
+             *. Pixel.get (Image.get_pixel image x (y + 1)) 0)
+      with _ -> 0.
+    in
+    let down_value =
+      try
+        sqrt
+          (Pixel.get (Image.get_pixel image x (y - 1)) 2
+           *. Pixel.get (Image.get_pixel image x (y - 1)) 2
+          +. Pixel.get (Image.get_pixel image x (y - 1)) 1
+             *. Pixel.get (Image.get_pixel image x (y - 1)) 1
+          +. Pixel.get (Image.get_pixel image x (y - 1)) 0
+             *. Pixel.get (Image.get_pixel image x (y - 1)) 0)
+      with _ -> 0.
+    in
+    up_value -. down_value
+  in
+  let gradient_evalutation x y =
+    let grad_x = gradient_x x y in
+    let grad_y = gradient_y x y in
+    let gradient_tot = sqrt ((grad_x *. grad_x) +. (grad_y *. grad_y)) in
+    Image.set_pixel gradient_image x y
+      (Pixel.v Color.gray
+         [ (if gradient_tot >= gradient_floor then gradient_tot else 0.) ])
+  in
+  Image.for_each_pixel (fun x y _ -> gradient_evalutation x y) image;
+  Image.convert ty rgb gradient_image
