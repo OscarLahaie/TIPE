@@ -7,8 +7,8 @@ let is_isolated pixel_selection x y surrounding_pixels =
          | None -> false
          | Some pixel ->
              Pixel.get pixel 0 > 0.
-             && Pixel.get pixel 1 > 0.
-             && Pixel.get pixel 2 > 0.)
+             || Pixel.get pixel 1 > 0.
+             || Pixel.get pixel 2 > 0.)
        [
          Hashtbl.find_opt pixel_selection (x, y - 1);
          Hashtbl.find_opt pixel_selection (x, y + 1);
@@ -48,7 +48,7 @@ let erosion ~surrounding_pixels ~round pixel_selection =
     let transition = Hashtbl.copy !selection in
     Hashtbl.iter
       (fun (x, y) _ ->
-        if is_isolated pixel_selection x y surrounding_pixels then
+        if is_isolated !selection x y surrounding_pixels then
           Hashtbl.remove transition (x, y))
       pixel_selection;
     selection := transition
