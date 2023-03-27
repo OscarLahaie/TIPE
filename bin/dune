@@ -1,6 +1,6 @@
 (executables
- (public_names main border hsv opti)
- (names main border_detection hsv main_optimise)
+ (public_names main border hsv opti cali)
+ (names main border_detection hsv main_optimise calibrage)
  (libraries TIPE bimage-unix bimage-io bimage-display))
 
 (env
